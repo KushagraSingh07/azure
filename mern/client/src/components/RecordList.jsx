@@ -4,9 +4,11 @@ import { Link } from "react-router-dom";
 function displayLevel(level) {
   if (!level) return "";
   const normalized = level.toString().trim().toLowerCase();
+
   if (normalized === "intern") return "Intern";
   if (normalized === "junior") return "Junior";
   if (normalized === "senior") return "Senior";
+
   return level;
 }
 
@@ -15,12 +17,15 @@ const Record = (props) => (
     <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
       {props.record.name}
     </td>
+
     <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
       {props.record.position}
     </td>
+
     <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
       {displayLevel(props.record.level)}
     </td>
+
     <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
       <div className="flex gap-2">
         <Link
@@ -29,6 +34,7 @@ const Record = (props) => (
         >
           Edit
         </Link>
+
         <button
           className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-slate-100 hover:text-accent-foreground h-9 rounded-md px-3"
           color="red"
@@ -47,32 +53,35 @@ const Record = (props) => (
 export default function RecordList() {
   const [records, setRecords] = useState([]);
 
-  // This method fetches the records from the database.
+  // Fetch records from the database
   useEffect(() => {
     async function getRecords() {
-      const response = await fetch(`/record/`);
+      const response = await fetch("/record/");
+
       if (!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
         console.error(message);
         return;
       }
+
       const records = await response.json();
       setRecords(records);
     }
+
     getRecords();
-    return;
   }, [records.length]);
 
-  // This method will delete a record
+  // Delete a record
   async function deleteRecord(id) {
     await fetch(`/record/${id}`, {
       method: "DELETE",
     });
+
     const newRecords = records.filter((el) => el._id !== id);
     setRecords(newRecords);
   }
 
-  // This method will map out the records on the table
+  // Map records into table rows
   function recordList() {
     return records.map((record) => {
       return (
@@ -85,10 +94,10 @@ export default function RecordList() {
     });
   }
 
-  // This following section will display the table with the records of individuals.
   return (
     <>
       <h3 className="text-lg font-semibold p-4">Employee Records</h3>
+
       <div className="border rounded-lg overflow-hidden">
         <div className="relative w-full overflow-auto">
           <table className="w-full caption-bottom text-sm">
@@ -97,17 +106,21 @@ export default function RecordList() {
                 <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                   Name
                 </th>
+
                 <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                   Position
                 </th>
+
                 <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                   Level
                 </th>
+
                 <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                   Action
                 </th>
               </tr>
             </thead>
+
             <tbody className="[&amp;_tr:last-child]:border-0">
               {recordList()}
             </tbody>
